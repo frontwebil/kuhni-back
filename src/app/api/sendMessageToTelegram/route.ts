@@ -1,5 +1,19 @@
+// ✅ CORS для preflight
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
+}
+
+// ✅ Твій POST
 export async function POST(req: Request) {
-  const { name, phone } = await req.json();
+  const body = await req.json();
+  const { name, phone } = body;
 
   const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
   const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
@@ -26,5 +40,12 @@ export async function POST(req: Request) {
     }),
   });
 
-  return Response.json({ ok: true });
+  return Response.json(
+    { ok: true },
+    {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    },
+  );
 }
